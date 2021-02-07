@@ -1,0 +1,7 @@
+-cp src
+-lib heaps
+-lib hlsdl
+-hl game.hl
+-main Main
+-debug
+-D windowSize=640x480
