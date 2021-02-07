@@ -1,7 +1,5 @@
 import hxd.Key;
-import hxd.Timer;
 import h2d.col.Point;
-import hxd.Rand;
 import h2d.Tile;
 import h2d.Scene;
 import haxe.io.Bytes;
@@ -18,30 +16,30 @@ class Raycaster extends Object {
     var mapheight = 24;
 
     var worldMap = [
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1],
-        [1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1],
-        [1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7],
+        [4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7],
+        [4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7],
+        [4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7],
+        [4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7],
+        [4,0,4,0,0,0,0,5,5,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7],
+        [4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1],
+        [4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8],
+        [4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1],
+        [4,0,8,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8],
+        [4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,7,7,7,1],
+        [4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,7,7,7,7,7,7,7,1],
+        [6,6,6,6,6,6,6,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6],
+        [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4],
+        [6,6,6,6,6,6,0,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6],
+        [4,4,4,4,4,4,0,4,4,4,6,0,6,2,2,2,2,2,2,2,3,3,3,3],
+        [4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2],
+        [4,0,0,0,0,0,0,0,0,0,0,0,6,2,0,0,5,0,0,2,0,0,0,2],
+        [4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2],
+        [4,0,6,0,6,0,0,0,0,4,6,0,0,0,0,0,5,0,0,0,0,0,0,2],
+        [4,0,0,5,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2],
+        [4,0,6,0,6,0,0,0,0,4,6,0,6,2,0,0,5,0,0,2,0,0,0,2],
+        [4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2],
+        [4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3]
     ];
 
     var screenWidth:Int;
@@ -53,6 +51,10 @@ class Raycaster extends Object {
 
     var time:Float = 0;
     var oldTime:Float = 0;
+
+    var textures = new Array<Pixels>();
+    var texWidth:Int = 64;
+    var texHeight:Int = 64;
 
     public function new (parent:Scene) {
         super(parent);
@@ -67,8 +69,38 @@ class Raycaster extends Object {
         bytes = Bytes.alloc(len * 4);
         pixels = new Pixels(w, h, bytes, ARGB);
 
-        var time:Float = 0;
-        var oldTime:Float = 0;
+        for(i in 0...8) {
+            textures[i] = new Pixels(texWidth, texHeight, Bytes.alloc(texWidth * texHeight * 4), ARGB);
+        }
+
+        #if 0
+        for (x in 0...texWidth) {
+            for (y in 0...texHeight) {
+                var xorColor:UInt = Std.int((x * 256 / texWidth)) ^ Std.int((y * 256 / texHeight));
+                var xColor:UInt = Std.int(x * 256 / texWidth);
+                var yColor:UInt = Std.int(y * 256 / texHeight);
+                var xyColor:UInt = Std.int(y * 128 / texHeight + x * 128 / texWidth);
+                textures[0].setPixel(x, y, (65536 * 254 * cast(x != y && x != texWidth - y)) | 0xFF << 24); // flat red texture with black cross
+                textures[1].setPixel(x, y, (xyColor + 256 * xyColor + 65536 * xyColor) | 0xFF << 24); // sloped greyscale
+                textures[2].setPixel(x, y, (256 * xyColor + 65536 * xyColor) | 0xFF << 24); // sloped yellow gradient
+                textures[3].setPixel(x, y, (xorColor + 256 * xorColor + 65536 * xorColor) | 0xFF << 24); //xor greyscale
+                textures[4].setPixel(x, y, (256 * xorColor) | 0xFF << 24); // xor  
+                textures[5].setPixel(x, y, (65536 * 192 * cast(x % 16 == 0 && y % 16 == 0)) | 0xFF << 24); // red ricks
+                textures[6].setPixel(x, y, (65536 * yColor) | 0xFF << 24); // red gradient
+                textures[7].setPixel(x, y, (128 + 256 * 128 + 65536 * 128) | 0xFF << 24); // flat grey texture
+            }
+        }
+        #else
+        var tiles = hxd.Res.wolftextures.getPixels(ARGB);    
+        textures[0] = tiles.sub(0, 0, texWidth, texHeight);
+        textures[1] = tiles.sub(1 * texWidth, 0, texWidth, texHeight);
+        textures[2] = tiles.sub(2 * texWidth, 0, texWidth, texHeight);
+        textures[3] = tiles.sub(3 * texWidth, 0, texWidth, texHeight);
+        textures[4] = tiles.sub(4 * texWidth, 0, texWidth, texHeight);
+        textures[5] = tiles.sub(5 * texWidth, 0, texWidth, texHeight);
+        textures[6] = tiles.sub(6 * texWidth, 0, texWidth, texHeight);
+        textures[7] = tiles.sub(7 * texWidth, 0, texWidth, texHeight);
+        #end
     }
 
     public function update(dt:Float) {
@@ -177,24 +209,34 @@ class Raycaster extends Object {
             var drawEnd = Std.int(lineHeight / 2 + screenHeight / 2);
             if (drawEnd >= screenHeight) drawEnd = screenHeight - 1;
 
-            var color:Int;
-            switch(worldMap[Std.int(map.x)][Std.int(map.y)]) {
-                case 1: color = 0x00ff0000;
-                case 2: color = 0x0000ff00;
-                case 3: color = 0x000000ff;
-                case 4: color = 0x00ffffff;
-                case _: color = 0x00e3fc03;
-            }
+            // texture calculations
+            var texNum:Int = worldMap[Std.int(map.x)][Std.int(map.y)] - 1;
 
-            // give x and y sides different brightness
-            if (side == 1) color = Std.int(color / 2);
+            var wallX:Float; // where exactly the wall was hit
+            if (side == 0) wallX = pos.y + perpWallDist * rayDirY;
+            else wallX = pos.x + perpWallDist * rayDirX;
+            wallX -= Math.floor(wallX);
 
-            color = color | 0xFF << 24;
+            // x coord on the texture
+            var texX = Std.int(wallX * texWidth);
+            if (side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
+            if (side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
 
+            var step = 1.0 * texHeight / lineHeight;
+            // starting tex Coord
+            var texPos = (drawStart - screenHeight / 2 + lineHeight / 2) * step;
+
+            // todo use pixels function to blit
             for(y in drawStart...drawEnd) {
+                var texY = Std.int(texPos) & (texHeight - 1);
+                texPos += step;
+                var color = textures[texNum].getPixel(texX, texY); 
+                //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+                if (side == 1) color = (color >> 1) & 8355711;
+                color = color | 0xff << 24;
+
                 pixels.setPixel(x, y, color);
             }
-
         }
 
         emitTile(ctx, Tile.fromPixels(pixels));
